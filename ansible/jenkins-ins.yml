@@ -1,0 +1,28 @@
+- name: Install Jenkins and Java on Ubuntu
+  hosts: localhost
+  become: yes
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Fontconfig
+      apt:
+        name: fontconfig
+        state: present
+    - name: Install java
+      apt:
+        name: openjdk-17-jre
+        state: present
+    - name: Download key for repository
+      shell:
+        cmd: wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+    - name: Add key to repository
+      shell:
+        cmd: echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+    - name: Install Jenkins
+      apt:
+        name: jenkins
+        state: present
+        update_cache: yes

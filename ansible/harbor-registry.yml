@@ -1,0 +1,16 @@
+- hosts: server2
+  become: yes
+  tasks:
+    - name: Download package
+      shell:
+        cmd: curl -s https://api.github.com/repos/goharbor/harbor/releases/latest | grep browser_download_url | cut -d '"' -f 4 | grep '.tgz$' | wget -i -
+    - name: Extract package
+      shell:
+        cmd: tar xvzf harbor-offline-installer*.tgz
+    - name: Configure harbor
+      copy:
+        src: /home/sang/book1/harbor.yml
+        dest: /home/ubuntu/harbor/harbor.yml
+    - name: Install Harbor
+      shell:
+        cmd: /home/ubuntu/harbor/install.sh

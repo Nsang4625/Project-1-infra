@@ -1,0 +1,15 @@
+- hosts: localhost
+  become: yes
+  tasks:
+    - name: Build image and push it to private registry
+      docker_image:
+        build:
+          path: "{{workdir}}"
+        name: registry.cloudemon.me/project-1/be
+        push: yes
+        source: build
+    - name: Remove image after pushed
+      docker_image:
+        state: absent
+        name: registry.cloudemon.me/project-1/be
+        tag: latest

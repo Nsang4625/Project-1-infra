@@ -1,0 +1,17 @@
+- hosts: server1
+  become: yes
+  name: Set up volume and db container
+  tasks:
+    - name: Run db container
+      docker_container:
+        name: db
+        image: 'postgres:15.1'
+        state: started
+        volumes:
+          - /home/ubuntu/postgresqldata:/var/lib/postgresql/data
+        published_ports:
+          - "3002:5432"
+        restart_policy: on-failure
+        env:
+          POSTGRES_PASSWORD: "123456"
+          POSTGRES_USER: 'postgres'
